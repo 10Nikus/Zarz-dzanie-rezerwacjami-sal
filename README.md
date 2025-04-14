@@ -1,4 +1,4 @@
 Aplikacja do zarządzania rezerwacją sal
--wyświetlanie rezerwacji
--dodawanie rezerwacji
--odwoływanie rezerwacji
+\n-wyświetlanie rezerwacji
+\n-dodawanie rezerwacji
+\n-odwoływanie rezerwacji
