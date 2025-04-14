@@ -2,10 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <locale.h>
 
 #define MAX_LINE 1024
 
 int main() {
+    setlocale(LC_ALL, "");
     FILE* plik = fopen("rezerwacje.csv", "r");
     if (plik == NULL) {
         perror("Nie mo¿na otworzyæ pliku");
