@@ -11,7 +11,7 @@ void write_file(void);
 
 int main() {
     setlocale(LC_ALL, "");
-    //write_file();
+    // write_file();
     open_file();
     return 0;
 }
