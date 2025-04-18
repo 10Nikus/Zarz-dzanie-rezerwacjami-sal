@@ -74,13 +74,13 @@ void write_file(void)
     char imie[50], nazwisko[50], data[15], godz_od[6], godz_do[6], sala[10], typ[50];
 
     printf("Podaj imiê: ");
-    scanf("%49s", imie);
+    scanf("%20s", imie);
 
     printf("Podaj nazwisko: ");
-    scanf("%49s", nazwisko);
+    scanf("%20s", nazwisko);
 
     printf("Podaj datê (RRRR-MM-DD): ");
-    scanf("%14s", data);
+    scanf("%20s", data);
 
     printf("Godzina rozpoczêcia (HH:MM): ");
     scanf("%5s", godz_od);
@@ -89,10 +89,10 @@ void write_file(void)
     scanf("%5s", godz_do);
 
     printf("Sala: ");
-    scanf("%9s", sala);
+    scanf("%3s", sala);
 
     printf("Typ wydarzenia: ");
-    scanf("%49s", typ);
+    scanf("%20s", typ);
 
     err = fopen_s(&plik, "rezerwacje.csv", "a");
     if (err != 0 || plik == NULL) {
