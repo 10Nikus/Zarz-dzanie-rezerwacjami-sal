@@ -1,4 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <locale.h>
 
 #define MAX_LINE 1024
 
@@ -7,7 +10,7 @@ void write_file(void);
 void menu(void);
 
 int main() {
-    //setlocale(LC_ALL, "");
+    setlocale(LC_ALL, "");
     menu();
     return 0;
 }
@@ -68,7 +71,6 @@ void write_file(void)
 
     printf("Cel rezerwacji: ");
     scanf_s("%19s", cel, (unsigned)sizeof(cel));
-    /*fprintf(plik,"%s,%s,%s,%s,%s,%s,%s\n", imie, nazwisko, data, godzina_p, godzina_k, numer_sali, cel);*/
     fprintf(plik, "\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n", imie, nazwisko, data, godzina_p, godzina_k, numer_sali, cel);
     printf("Dodano rezerwacje!\n");
     fclose(plik);
