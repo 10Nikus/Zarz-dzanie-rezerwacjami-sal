@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+ï»¿#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -9,6 +9,7 @@
 void open_file(void);
 void write_file(void);
 void menu(void);
+void remove_from_file(void);
 
 
 int main() {
@@ -19,49 +20,18 @@ int main() {
 
 
 
-
-
-
 void remove_from_file(void)
 {
     printf("Deleted");
     menu();
 }
 
-
-void menu(void)
-{
-    int option;
-    printf("Choose action:\n 1.Add Reservation\n 2.Remove reservation\n 3.Show reservations\n 4.Exit\n");
-    scanf_s( "%d", &option);
-    switch (option)
-    {
-    case 1:
-        write_file();
-        break;
-    case 2:
-        remove_from_file();
-        break;
-    case 3:
-        open_file();
-        break;
-    case 4:
-        return;
-
-    default:
-        break;
-    }
-
-}
-
-
-
 void open_file(void)
 {
     FILE* plik = fopen("rezerwacje.csv", "r");
     if (plik == NULL) {
-        perror("Nie mo¿na otworzyæ pliku");
-        return ;
+        perror("Nie moÂ¿na otworzyÃ¦ pliku");
+        return;
     }
 
     char linia[MAX_LINE];
@@ -88,7 +58,7 @@ void write_file(void)
     FILE* plik = NULL;
     errno_t err = fopen_s(&plik, "rezerwacje.csv", "r");
     if (err != 0 || plik == NULL) {
-        perror("Nie mo¿na otworzyæ pliku");
+        perror("Nie moÂ¿na otworzyÃ¦ pliku");
         return;
     }
 
@@ -114,19 +84,19 @@ void write_file(void)
 
     char imie[50], nazwisko[50], data[15], godz_od[6], godz_do[6], sala[10], typ[50];
 
-    printf("Podaj imiê: ");
+    printf("Podaj imiÃª: ");
     scanf("%20s", imie);
 
     printf("Podaj nazwisko: ");
     scanf("%20s", nazwisko);
 
-    printf("Podaj datê (RRRR-MM-DD): ");
+    printf("Podaj datÃª (RRRR-MM-DD): ");
     scanf("%20s", data);
 
-    printf("Godzina rozpoczêcia (HH:MM): ");
+    printf("Godzina rozpoczÃªcia (HH:MM): ");
     scanf("%5s", godz_od);
 
-    printf("Godzina zakoñczenia (HH:MM): ");
+    printf("Godzina zakoÃ±czenia (HH:MM): ");
     scanf("%5s", godz_do);
 
     printf("Sala: ");
@@ -135,52 +105,28 @@ void write_file(void)
     printf("Typ wydarzenia: ");
     scanf("%20s", typ);
 
+
     err = fopen_s(&plik, "rezerwacje.csv", "a");
     if (err != 0 || plik == NULL) {
-        perror("Nie mo¿na otworzyæ pliku");
+        perror("Nie mo?na otworzy? pliku");
         return;
     }
-    printf("Podaj dane do rezerwacji:\n");
-    char imie[20], nazwisko[20], data[10], godzina_p[5], godzina_k[5], numer_sali[5], cel[20];
-    printf("Imie: ");
-    scanf_s("%19s", imie, (unsigned)sizeof(imie));
 
-    printf("Nazwisko: ");
-    scanf_s("%19s", nazwisko, (unsigned)sizeof(nazwisko));
+    fprintf(plik, "%d,%s,%s,%s,%s,%s,%s,%s\n", new_id, imie, nazwisko, data, godz_od, godz_do, sala, typ);
+    printf("Dodano rezerwacj? z ID %d!\n", new_id);
 
-    printf("Data (YYYY-MM-DD): ");
-    scanf_s("%10s", data, (unsigned)sizeof(data));
-
-    printf("Godzina rozpoczêcia (HH:MM): ");
-    scanf_s("%5s", godzina_p, (unsigned)sizeof(godzina_p));
-
-    printf("Godzina zakoñczenia (HH:MM): ");
-    scanf_s("%5s", godzina_k, (unsigned)sizeof(godzina_k));
-
-    printf("Numer sali: ");
-    scanf_s("%5s", numer_sali, (unsigned)sizeof(numer_sali));
-
-    printf("Cel rezerwacji: ");
-    scanf_s("%19s", cel, (unsigned)sizeof(cel));
-    /*fprintf(plik,"%s,%s,%s,%s,%s,%s,%s\n", imie, nazwisko, data, godzina_p, godzina_k, numer_sali, cel);*/
-    fprintf(plik, "\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",\"%s\"\n", imie, nazwisko, data, godzina_p, godzina_k, numer_sali, cel);
-    printf("Dodano rezerwacje!\n");
     fclose(plik);
+
     menu();
 }
 
-void remove_from_file(void)
-{
-    printf("Deleted");
-    menu();
-}
 
 
 void menu(void)
 {
     int option;
     printf("Choose action:\n 1.Add Reservation\n 2.Remove reservation\n 3.Show reservations\n 4.Exit\n");
-    scanf_s( "%d", &option);
+    scanf_s("%d", &option);
     switch (option)
     {
     case 1:
