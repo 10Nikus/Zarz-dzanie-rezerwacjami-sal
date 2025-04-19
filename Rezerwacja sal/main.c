@@ -1,19 +1,29 @@
-﻿#define _CRT_SECURE_NO_WARNINGS
-#include <stdio.h>
+﻿#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <locale.h>
 
 #define MAX_LINE 1024
+#define _CRT_SECURE_NO_WARNINGS
 
-void open_file(void);
-void write_file(void);
+void read_from_file(void);
+void write_to_file(void);
 void menu(void);
 void remove_from_file(void);
 
 
+typedef struct reservation {
+    int id;
+    char first_name[50];
+    char last_name[50];
+    char date[11];
+    char hour_start[6];
+    char hour_end[6];
+    char number[20];
+    char reason[100];
+};
+
 int main() {
-    setlocale(LC_ALL, "");
     menu();
     return 0;
 }
@@ -26,97 +36,79 @@ void remove_from_file(void)
     menu();
 }
 
-void open_file(void)
+void read_from_file(void)
 {
-    FILE* plik = fopen("rezerwacje.csv", "r");
-    if (plik == NULL) {
-        perror("Nie mo¿na otworzyæ pliku");
-        return;
+    FILE * file = fopen("reservation.bin", "rb");
+    if (file == NULL) {
+        printf("Error! opening file");
+        exit(1);
     }
+    struct reservation res;
 
-    char linia[MAX_LINE];
-
-    while (fgets(linia, MAX_LINE, plik)) {
-        linia[strcspn(linia, "\n")] = 0;
-
-        char* context = NULL;
-        char* kolumna = strtok_s(linia, ",", &context);
-        while (kolumna != NULL) {
-            printf("%s\t", kolumna);
-            kolumna = strtok_s(NULL, ",", &context);
-        }
-        printf("\n");
+    while (fread(&res, sizeof(res), 1, file)){
+        printf("%i, %s, %s, %s, %s, %s, %s, %s\n", 
+            res.id, 
+            res.first_name, 
+            res.last_name, 
+            res.date, 
+            res.hour_start, 
+            res.hour_end, 
+            res.number,
+            res.reason);
     }
-
-    fclose(plik);
+    fclose(file);
     menu();
 }
 
 
-void write_file(void)
+void write_to_file(void)
 {
-    FILE* plik = NULL;
-    errno_t err = fopen_s(&plik, "rezerwacje.csv", "r");
-    if (err != 0 || plik == NULL) {
-        perror("Nie mo¿na otworzyæ pliku");
-        return;
+    FILE* file = fopen( "reservation.bin", "ab");
+    if (file == NULL) {
+        printf("Error! opening file");
+
+        exit(1);
+    }
+   
+    int flag = 0;
+
+    struct reservation res;
+    
+
+    printf("Enter ID: ");
+    scanf_s("%d", &res.id);
+
+    printf("Enter first name: ");
+    scanf_s("%49s", res.first_name, (unsigned)_countof(res.first_name));
+
+    printf("Enter last name: ");
+    scanf_s("%49s", res.last_name, (unsigned)_countof(res.last_name));
+
+    printf("Enter date (DD.MM.YYYY): ");
+    scanf_s("%10s", res.date, (unsigned)_countof(res.date));
+
+    printf("Enter start time (HH:MM): ");
+    scanf_s("%5s", res.hour_start, (unsigned)_countof(res.hour_start));
+
+    printf("Enter end time (HH:MM): ");
+    scanf_s("%5s", res.hour_end, (unsigned)_countof(res.hour_end));
+
+    printf("Enter the number of room (123):");
+    scanf_s("%5s", res.number, (unsigned)_countof(res.number));
+
+    printf("Enter reason for reservation: ");
+    scanf_s("%99s", res.reason, (unsigned)_countof(res.reason));
+
+    flag = fwrite(&res, sizeof(res), 1, file);
+
+    if (!flag) {
+        printf("Write Operation Failure\n");
+    }
+    else {
+        printf("Write Operation Successful\n");
     }
 
-    char linia[MAX_LINE];
-    int last_id = 0;
-
-    while (fgets(linia, MAX_LINE, plik)) {
-        linia[strcspn(linia, "\n")] = 0;
-
-        char* context = NULL;
-        char* kolumna = strtok_s(linia, ",", &context);
-        if (kolumna != NULL) {
-            int current_id = atoi(kolumna);
-            if (current_id > last_id) {
-                last_id = current_id;
-            }
-        }
-    }
-
-    fclose(plik);
-
-    int new_id = last_id + 1;
-
-    char imie[50], nazwisko[50], data[15], godz_od[6], godz_do[6], sala[10], typ[50];
-
-    printf("Podaj imiê: ");
-    scanf("%20s", imie);
-
-    printf("Podaj nazwisko: ");
-    scanf("%20s", nazwisko);
-
-    printf("Podaj datê (RRRR-MM-DD): ");
-    scanf("%20s", data);
-
-    printf("Godzina rozpoczêcia (HH:MM): ");
-    scanf("%5s", godz_od);
-
-    printf("Godzina zakoñczenia (HH:MM): ");
-    scanf("%5s", godz_do);
-
-    printf("Sala: ");
-    scanf("%3s", sala);
-
-    printf("Typ wydarzenia: ");
-    scanf("%20s", typ);
-
-
-    err = fopen_s(&plik, "rezerwacje.csv", "a");
-    if (err != 0 || plik == NULL) {
-        perror("Nie mo?na otworzy? pliku");
-        return;
-    }
-
-    fprintf(plik, "%d,%s,%s,%s,%s,%s,%s,%s\n", new_id, imie, nazwisko, data, godz_od, godz_do, sala, typ);
-    printf("Dodano rezerwacj? z ID %d!\n", new_id);
-
-    fclose(plik);
-
+    fclose(file);
     menu();
 }
 
@@ -130,13 +122,13 @@ void menu(void)
     switch (option)
     {
     case 1:
-        write_file();
+        write_to_file();
         break;
     case 2:
         remove_from_file();
         break;
     case 3:
-        open_file();
+        read_from_file();
         break;
     case 4:
         return;
