@@ -32,7 +32,38 @@ int main() {
 
 void remove_from_file(void)
 {
-    printf("Deleted");
+    struct reservation res;
+    int id_to_delete;
+    printf("Input id reservation to delete: ");
+    scanf_s("%i", &id_to_delete);
+
+    FILE* file = fopen("reservation.bin", "rb");
+    if (file == NULL) {
+        printf("Error! opening file");
+        exit(1);
+    }
+
+    FILE* temp_file = fopen("temp_reservation.bin", "wb");
+    if (temp_file == NULL) {
+        printf("Error! opening file");
+        fclose(file);
+        exit(1);
+    }
+
+    while (fread(&res, sizeof(res), 1, file))   
+    {
+        if (id_to_delete != res.id)
+        {
+            fwrite(&res, sizeof(res), 1, temp_file);
+        }
+    }
+    fclose(file);
+    fclose(temp_file);
+    
+    remove("reservation.bin");
+    rename("temp_reservation.bin", "reservation.bin");
+    printf("Record with ID %d deleted successfully.\n", id_to_delete);
+
     menu();
 }
 
@@ -101,7 +132,7 @@ void write_to_file(void)
     printf("Enter end time (HH:MM): ");
     scanf_s("%5s", res.hour_end, (unsigned)_countof(res.hour_end));
 
-    printf("Enter the number of room (123):");
+    printf("Enter the number of room (123): ");
     scanf_s("%5s", res.number, (unsigned)_countof(res.number));
 
     printf("Enter reason for reservation: ");
