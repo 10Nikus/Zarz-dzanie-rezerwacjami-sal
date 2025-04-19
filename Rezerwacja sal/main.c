@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <locale.h>
-
+#include <ctype.h> 
 
 
 void read_from_file(void);
@@ -37,34 +37,47 @@ void remove_from_file(void)
     printf("Input id reservation to delete: ");
     scanf_s("%i", &id_to_delete);
 
-    FILE* file = fopen("reservation.bin", "rb");
-    if (file == NULL) {
-        printf("Error! opening file");
-        exit(1);
-    }
+    getchar();
 
-    FILE* temp_file = fopen("temp_reservation.bin", "wb");
-    if (temp_file == NULL) {
-        printf("Error! opening file");
-        fclose(file);
-        exit(1);
-    }
+    char agree;
+    printf("Are you sure you want to delete reservation with id %i? (y/n): ", id_to_delete);
+    scanf_s("%c", &agree, sizeof(agree));
+    if (tolower(agree) == 'y') {
 
-    while (fread(&res, sizeof(res), 1, file))   
-    {
-        if (id_to_delete != res.id)
-        {
-            fwrite(&res, sizeof(res), 1, temp_file);
+
+        FILE* file = fopen("reservation.bin", "rb");
+        if (file == NULL) {
+            printf("Error! opening file");
+            exit(1);
         }
-    }
-    fclose(file);
-    fclose(temp_file);
-    
-    remove("reservation.bin");
-    rename("temp_reservation.bin", "reservation.bin");
-    printf("Record with ID %d deleted successfully.\n", id_to_delete);
 
+        FILE* temp_file = fopen("temp_reservation.bin", "wb");
+        if (temp_file == NULL) {
+            printf("Error! opening file");
+            fclose(file);
+            exit(1);
+        }
+
+        while (fread(&res, sizeof(res), 1, file))
+        {
+            if (id_to_delete != res.id)
+            {
+                fwrite(&res, sizeof(res), 1, temp_file);
+            }
+        }
+        fclose(file);
+        fclose(temp_file);
+
+        remove("reservation.bin");
+        rename("temp_reservation.bin", "reservation.bin");
+        printf("Record with ID %d deleted successfully.\n", id_to_delete);
+    }
+    else
+    {
+        printf("Operation cancelled\n");
+    }
     menu();
+
 }
 
 void read_from_file(void)
