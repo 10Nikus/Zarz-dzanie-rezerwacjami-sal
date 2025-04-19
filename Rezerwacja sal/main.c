@@ -1,10 +1,10 @@
-﻿#include <stdio.h>
+﻿#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <locale.h>
 
-#define MAX_LINE 1024
-#define _CRT_SECURE_NO_WARNINGS
+
 
 void read_from_file(void);
 void write_to_file(void);
@@ -63,20 +63,28 @@ void read_from_file(void)
 
 void write_to_file(void)
 {
-    FILE* file = fopen( "reservation.bin", "ab");
+    FILE* file = fopen( "reservation.bin", "rb");
     if (file == NULL) {
         printf("Error! opening file");
-
         exit(1);
     }
-   
-    int flag = 0;
+ 
 
     struct reservation res;
-    
 
-    printf("Enter ID: ");
-    scanf_s("%d", &res.id);
+    int last_id = -1;
+
+    while (fread(&res, sizeof(res), 1, file) == 1) {
+        last_id = res.id;
+    }
+    
+    if (last_id == -1) {
+        last_id = 0;
+    }
+
+    res.id = ++last_id;
+
+    fclose(file);
 
     printf("Enter first name: ");
     scanf_s("%49s", res.first_name, (unsigned)_countof(res.first_name));
@@ -99,6 +107,13 @@ void write_to_file(void)
     printf("Enter reason for reservation: ");
     scanf_s("%99s", res.reason, (unsigned)_countof(res.reason));
 
+    file = fopen("reservation.bin", "ab");
+    if (file == NULL) {
+        printf("Error! opening file");
+        exit(1);
+    }
+
+    int flag = 0;
     flag = fwrite(&res, sizeof(res), 1, file);
 
     if (!flag) {
