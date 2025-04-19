@@ -10,7 +10,8 @@ void read_from_file(void);
 void write_to_file(void);
 void menu(void);
 void remove_from_file(void);
-
+void find_reservation_by_id(void);
+void find_reservation_by_date(void);
 
 typedef struct reservation {
     int id;
@@ -171,12 +172,78 @@ void write_to_file(void)
     menu();
 }
 
+void find_reservation_by_id(void)
+{
+    int id;
+    int found = 0;
+    printf("Id reservation to find: ");
+    scanf_s("%i", &id);
+    FILE* file = fopen("reservation.bin", "rb");
+    if (file == NULL) {
+        printf("Error! opening file");
+        exit(1);
+    }
+    struct reservation res;
 
+    while (fread(&res, sizeof(res), 1, file))
+    {
+        if (res.id == id)
+        {
+            printf("%i, %s, %s, %s, %s, %s, %s, %s\n",
+                res.id,
+                res.first_name,
+                res.last_name,
+                res.date,
+                res.hour_start,
+                res.hour_end,
+                res.number,
+                res.reason);
+            found = 1;
+        }
+    }
+    if (!found) printf("Reservation not found!\n");
+    fclose(file);
+    menu();
+}
+
+void find_reservation_by_date(void)
+{
+    struct reservation res;
+    char date[11];
+    int found = 0;
+    printf("Date reservation to find: ");
+    scanf_s("%s", &date, sizeof(res.date));
+    FILE* file = fopen("reservation.bin", "rb");
+    if (file == NULL) {
+        printf("Error! opening file");
+        exit(1);
+    }
+
+    while (fread(&res, sizeof(res), 1, file))
+    {
+        if (strcmp(date, res.date) == 0)
+        {
+            printf("%i, %s, %s, %s, %s, %s, %s, %s\n",
+                res.id,
+                res.first_name,
+                res.last_name,
+                res.date,
+                res.hour_start,
+                res.hour_end,
+                res.number,
+                res.reason);
+            found = 1;
+        }
+    }
+    if (!found) printf("Reservation not found!\n");
+    fclose(file);
+    menu();
+}
 
 void menu(void)
 {
     int option;
-    printf("Choose action:\n 1.Add Reservation\n 2.Remove reservation\n 3.Show reservations\n 4.Exit\n");
+    printf("Choose action:\n 1.Add Reservation\n 2.Remove reservation\n 3.Show all reservations\n 4.Find reservation by id \n 5.Find reservation by date\n 6.Exit\n");
     scanf_s("%d", &option);
     switch (option)
     {
@@ -190,6 +257,12 @@ void menu(void)
         read_from_file();
         break;
     case 4:
+        find_reservation_by_id();
+        break;
+    case 5:
+        find_reservation_by_date();
+        break;
+    case 6:
         return;
 
     default:
