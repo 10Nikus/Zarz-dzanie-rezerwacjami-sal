@@ -30,7 +30,6 @@ int main() {
 }
 
 
-
 void remove_from_file(void)
 {
     struct reservation res;
@@ -140,7 +139,7 @@ void write_to_file(void)
     printf("Enter date (DD.MM.YYYY): ");
     scanf_s("%10s", res.date, (unsigned)_countof(res.date));
 
-    printf("Enter start time (HH:MM): ");
+    printf("Enter start time (HH:MM):");
     scanf_s("%5s", res.hour_start, (unsigned)_countof(res.hour_start));
 
     printf("Enter end time (HH:MM): ");
@@ -152,23 +151,50 @@ void write_to_file(void)
     printf("Enter reason for reservation: ");
     scanf_s("%99s", res.reason, (unsigned)_countof(res.reason));
 
-    file = fopen("reservation.bin", "ab");
+
+    file = fopen("reservation.bin", "rb");
     if (file == NULL) {
-        printf("Error! opening file");
+        printf("Error! opening file\n");
         exit(1);
     }
 
-    int flag = 0;
-    flag = fwrite(&res, sizeof(res), 1, file);
+    struct reservation temp;
+    int is_taken = 0;
 
-    if (!flag) {
-        printf("Write Operation Failure\n");
-    }
-    else {
-        printf("Write Operation Successful\n");
+    while (fread(&temp, sizeof(temp), 1, file) == 1) {
+        if (strcmp(temp.date, res.date) == 0 && strcmp(temp.number, res.number) == 0) {
+            if (!(strcmp(res.hour_end, temp.hour_start) <= 0 || strcmp(res.hour_start, temp.hour_end) >= 0)) {
+                is_taken = 1;
+                break;
+            }
+        }
     }
 
     fclose(file);
+
+    if (is_taken) {
+        printf("\nERROR: Room %s is already reserved on %s between %s and %s\n",
+            temp.number, temp.date, temp.hour_start, temp.hour_end);
+        printf("Reservation not saved.\n\n");
+    }
+    else {
+        file = fopen("reservation.bin", "ab");
+        if (file == NULL) {
+            printf("Error! opening file\n");
+            exit(1);
+        }
+
+        int flag = fwrite(&res, sizeof(res), 1, file);
+
+        if (!flag) {
+            printf("Write Operation Failure\n");
+        }
+        else {
+            printf("Write Operation Successful\n");
+        }
+
+        fclose(file);
+    }
     menu();
 }
 
@@ -268,5 +294,4 @@ void menu(void)
     default:
         break;
     }
-
 }
