@@ -9,12 +9,42 @@ void assign_ids_to_existing_reservations() {
 
 // Funkcja obs³uguj¹ca dialog dodawania rezerwacji
 INT_PTR CALLBACK AddReservationDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
-    // Kod funkcji pozostaje bez zmian
+    switch (message) {
+    case WM_INITDIALOG:
+        return (INT_PTR)TRUE;
+
+    case WM_COMMAND:
+        if (LOWORD(wParam) == IDOK) {
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+        }
+        else if (LOWORD(wParam) == IDCANCEL) {
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+        }
+        break;
+    }
+    return (INT_PTR)FALSE;
 }
 
 // Funkcja obs³uguj¹ca dialog usuwania rezerwacji
 INT_PTR CALLBACK RemoveReservationDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
-    // Kod funkcji pozostaje bez zmian
+    switch (message) {
+    case WM_INITDIALOG:
+        return (INT_PTR)TRUE;
+
+    case WM_COMMAND:
+        if (LOWORD(wParam) == IDOK) {
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+        }
+        else if (LOWORD(wParam) == IDCANCEL) {
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+        }
+        break;
+    }
+    return (INT_PTR)FALSE;
 }
 
 // Implementacja funkcji do zapisu do pliku
