@@ -127,7 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="guimain.c" />
+    <ClCompile Include="resource.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>
   <ItemGroup>
