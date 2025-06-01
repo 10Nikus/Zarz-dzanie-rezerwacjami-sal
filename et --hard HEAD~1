@@ -1,0 +1,17 @@
+[33mcommit cb11e1b591e5aa3ac117798ca5a715b3fafae263[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mPaulina[m[33m)[m
+Author: ppapiez@student.agh.edu.pl <ppapiez@student.agh.edu.pl>
+Date:   Tue May 6 16:21:38 2025 +0200
+
+    .
+
+[33mcommit 82ebe4293376b53400fec4e6f8f06864b408c3f0[m[33m ([m[1;31morigin/Paulina[m[33m)[m
+Author: 10Nikus <kijasnikodem@gmail.com>
+Date:   Mon Apr 14 16:48:19 2025 +0200
+
+    Dodaj pliki projektów.
+
+[33mcommit 9bc2150f5f939c321bbc6d62be29a949bd85698f[m
+Author: 10Nikus <kijasnikodem@gmail.com>
+Date:   Mon Apr 14 16:48:17 2025 +0200
+
+    Dodaj .gitattributes i .gitignore.

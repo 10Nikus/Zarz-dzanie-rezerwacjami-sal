@@ -1,0 +1,10 @@
+ID_Rezerwacji,Imiê,Nazwisko,Data_Rezerwacji,Godzina_Rozpoczêcia,Godzina_Zakoñczenia,Numer_Sali,Cel_Rezerwacji
+1,Jan,Kowalski,2025-04-20,09:00,11:00,101,Spotkanie zespo³owe
+2,Anna,Nowak,2025-04-20,11:30,13:30,102,Szkolenie
+3,Piotr,Zieliñski,2025-04-21,14:00,16:00,103,Konferencja
+4,Katarzyna,Wiœniewska,2025-04-22,08:30,10:30,104,Prezentacja
+5,Jakub,Kaczmarek,2025-04-22,13:00,15:00,101,Spotkanie zarz¹du
+6,Paulina,Maj,2025-04-23,10:00,12:00,102,Warsztaty
+"q","w","","","","123","test"
+
+7,Adam,Marek,1234-56-78,12:45,15:54,2,Test

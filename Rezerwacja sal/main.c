@@ -4,7 +4,7 @@
 #include <string.h>
 #include <locale.h>
 #include <ctype.h> 
-
+#include <wchar.h>
 
 void read_from_file(void);
 void write_to_file(void);
@@ -147,6 +147,10 @@ void write_to_file(void)
 
     printf("Enter the number of room (123): ");
     scanf_s("%5s", res.number, (unsigned)_countof(res.number));
+
+
+
+}
 
     printf("Enter reason for reservation: ");
     scanf_s("%99s", res.reason, (unsigned)_countof(res.reason));
@@ -294,4 +298,50 @@ void menu(void)
     default:
         break;
     }
+}
+
+// Funkcja do przypisania brakujących ID istniejącym rezerwacjom
+void assign_ids_to_existing_reservations() {
+    // Kod funkcji pozostaje bez zmian
+
+// Funkcja obsługująca dialog dodawania rezerwacji
+INT_PTR CALLBACK AddReservationDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
+    // Kod funkcji pozostaje bez zmian
+}
+
+// Funkcja obsługująca dialog usuwania rezerwacji
+INT_PTR CALLBACK RemoveReservationDialogProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
+    // Kod funkcji pozostaje bez zmian
+}
+
+// Implementacja funkcji do zapisu do pliku
+void write_to_file(HWND hwnd) {
+    DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_ADD_RESERVATION), hwnd, AddReservationDialogProc);
+}
+
+// Implementacja funkcji do odczytu z pliku
+void read_from_file(HWND hwnd) {
+    // Kod funkcji pozostaje bez zmian
+}
+
+// Funkcja wyszukiwania rezerwacji po ID
+void find_reservation_by_id(HWND hwnd) {
+    // Kod funkcji pozostaje bez zmian
+}
+
+// Funkcja do przypisania brakujących ID
+void initialize_reservations() {
+    assign_ids_to_existing_reservations();
+}
+
+// Funkcja do usuwania rezerwacji
+void remove_from_file(HWND hwnd) {
+    DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_REMOVE_RESERVATION), hwnd, RemoveReservationDialogProc);
+}
+
+// Główna funkcja programu
+int main() {
+    initialize_reservations();
+    // Reszta kodu programu
+    return 0;
 }
