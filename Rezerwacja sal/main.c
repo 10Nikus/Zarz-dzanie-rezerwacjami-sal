@@ -5,7 +5,6 @@
 #include <locale.h>
 #include <ctype.h> 
 
-
 void read_from_file(void);
 void write_to_file(void);
 void menu(void);
@@ -107,28 +106,23 @@ void read_from_file(void)
 
 void write_to_file(void)
 {
-    FILE* file = fopen( "reservation.bin", "rb");
-    if (file == NULL) {
-        printf("Error! opening file");
-        exit(1);
-    }
- 
+    FILE* file = fopen("reservation.bin", "rb");
 
     struct reservation res;
+    int last_id = 0;
 
-    int last_id = -1;
-
-    while (fread(&res, sizeof(res), 1, file) == 1) {
-        last_id = res.id;
+    if (file != NULL) {
+        while (fread(&res, sizeof(res), 1, file) == 1) {
+            last_id = res.id;
+        }
+        fclose(file);
     }
-    
-    if (last_id == -1) {
+    else {
+        // Plik nie istnieje – pierwszy zapis
         last_id = 0;
     }
 
-    res.id = ++last_id;
-
-    fclose(file);
+    res.id = last_id + 1;
 
     printf("Enter first name: ");
     scanf_s("%49s", res.first_name, (unsigned)_countof(res.first_name));
@@ -146,47 +140,40 @@ void write_to_file(void)
     scanf_s("%5s", res.hour_end, (unsigned)_countof(res.hour_end));
 
     printf("Enter the number of room (123): ");
-    scanf_s("%5s", res.number, (unsigned)_countof(res.number));
+    scanf_s("%19s", res.number, (unsigned)_countof(res.number));
 
     printf("Enter reason for reservation: ");
     scanf_s("%99s", res.reason, (unsigned)_countof(res.reason));
 
-
-    file = fopen("reservation.bin", "rb");
-    if (file == NULL) {
-        printf("Error! opening file\n");
-        exit(1);
-    }
-
-    struct reservation temp;
+    // Sprawdzenie kolizji
     int is_taken = 0;
-
-    while (fread(&temp, sizeof(temp), 1, file) == 1) {
-        if (strcmp(temp.date, res.date) == 0 && strcmp(temp.number, res.number) == 0) {
-            if (!(strcmp(res.hour_end, temp.hour_start) <= 0 || strcmp(res.hour_start, temp.hour_end) >= 0)) {
-                is_taken = 1;
-                break;
+    file = fopen("reservation.bin", "rb");
+    if (file != NULL) {
+        struct reservation temp;
+        while (fread(&temp, sizeof(temp), 1, file) == 1) {
+            if (strcmp(temp.date, res.date) == 0 && strcmp(temp.number, res.number) == 0) {
+                if (!(strcmp(res.hour_end, temp.hour_start) <= 0 || strcmp(res.hour_start, temp.hour_end) >= 0)) {
+                    is_taken = 1;
+                    break;
+                }
             }
         }
+        fclose(file);
     }
-
-    fclose(file);
 
     if (is_taken) {
         printf("\nERROR: Room %s is already reserved on %s between %s and %s\n",
-            temp.number, temp.date, temp.hour_start, temp.hour_end);
+            res.number, res.date, res.hour_start, res.hour_end);
         printf("Reservation not saved.\n\n");
     }
     else {
         file = fopen("reservation.bin", "ab");
         if (file == NULL) {
-            printf("Error! opening file\n");
+            perror("fopen for writing");
             exit(1);
         }
 
-        int flag = fwrite(&res, sizeof(res), 1, file);
-
-        if (!flag) {
+        if (fwrite(&res, sizeof(res), 1, file) != 1) {
             printf("Write Operation Failure\n");
         }
         else {
@@ -195,6 +182,7 @@ void write_to_file(void)
 
         fclose(file);
     }
+
     menu();
 }
 
